@@ -8,6 +8,7 @@
  */
 
 #include <msp430.h>
+#include "embedded_utils.h"
 
 void gpioInit();
 void timerInit();
@@ -29,11 +30,12 @@ void main(){
 
 
 void gpioInit(){
-    // @TODO Initialize the Red or Green LED
+    setAsOutput(1,0);
+    setAsOutput(6,6);
+    setAsInput(2,3);
 
-    // @TODO Initialize Button 2.3
-
-
+    clearPinValue(1,0);
+    setPinValue(1,0);
 }
 
 void timerInit(){

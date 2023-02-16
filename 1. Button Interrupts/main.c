@@ -9,8 +9,14 @@
 
 
 #include <msp430.h>
+#include <stdbool.h>
 
-char LED_Color = 0x01;                       // Global Variable to determine which LED should be blinking
+#include "embedded_utils.h"
+
+#define RED_LED 0x01
+#define GREEN_LED 0x00
+
+char LED_Color = RED_LED;                       // Global Variable to determine which LED should be blinking
 
 void gpioInit();
 
@@ -36,9 +42,15 @@ int main(void)
     while(1)
     {
         if (LED_Color)
+        {
             P1OUT ^= BIT0;                  // P1.0 = toggle
+            clearPinValue(6,6);
+        }
         else
+        {    
             P6OUT ^= BIT6;                 // P6.6 = toggle
+            clearPinValue(1,0);
+        }
         __delay_cycles(100000);
     }
 }
@@ -75,21 +87,20 @@ void gpioInit(){
 
 
 // Port 2 interrupt service routine
-#pragma vector=PORT2_VECTOR
-__interrupt void Port_2(void)
+void __attribute__ ((interrupt(PORT2_VECTOR))) Port_2 (void)
 {
     P2IFG &= ~BIT3;                         // Clear P1.3 IFG
 
-    if ( )       // @TODO Fill in this argument within the If statement to check if the interrupt was triggered off a rising edge.
+    bool risingEdge = !(P2IES & BIT3);
+    if (risingEdge)
     {
-        LED_Color = 0;
-        // @TODO Add code to change which edge the interrupt should be looking for next
+        LED_Color = RED_LED;
+        setInterruptEdgeFalling(2,3);
     }
-
-    else if ( ) // @TODO Fill in this argument within the If statement to check if the interrupt was triggered off a falling edge.
+    else
     {
-        LED_Color = 1;
-        // @TODO Add code to change which edge the interrupt should be looking for next
+        LED_Color = GREEN_LED;
+        setInterruptEdgeRising(2,3);
     }
 }
 
