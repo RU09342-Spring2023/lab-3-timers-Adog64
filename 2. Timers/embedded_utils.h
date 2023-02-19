@@ -11,7 +11,9 @@
 #define LOCATION_OF_P1IE  0x021A
 #define LOCATION_OF_P1IES 0x0218
 
-// ===== MEMORY LOCATION TABLE ======
+#define LOCATION_OF_TB0CTL 0x0380
+
+// ======= PORT MEMORY LOCATION TABLE =======
 // | PORT   | DIR   | OUT   | IE    | IES   |
 // |--------|-------|-------|-------|-------|
 // | P1     | 0204h | 0202h | 021Ah | 0218h |
@@ -133,6 +135,7 @@ void setInterruptEdgeFalling(char port, char pin)
     char* ies = LOCATION_OF_P1IES + ((port >> 1) << 5) + (port & 1);
     *ies |= bit;
 }
+
 
 
 
